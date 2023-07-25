@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:todo_app/screens/home_screen.dart';
 
-void main() {
+void main() async {
+  // init Hive
+  await Hive.initFlutter();
+
+  // open hive box
+  await Hive.openBox("Todo_Database");
+
   runApp(const MyApp());
 }
 
@@ -12,7 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'To Do',
+      title: 'TASK SPOT',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         checkboxTheme: CheckboxThemeData(
           side: BorderSide(color: Colors.grey, width: 2.0),
@@ -33,6 +42,7 @@ class MyApp extends StatelessWidget {
             },
           ),
         ),
+
         // This is the theme of your application.
         //
         // TRY THIS: Try running your application with "flutter run". You'll see

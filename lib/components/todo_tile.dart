@@ -40,15 +40,18 @@ class TodoTile extends StatelessWidget {
                 value: isCompleted,
                 onChanged: onChanged,
               ),
-              Text(
-                todo,
-                style: TextStyle(
-                  color: Colors.white,
-                  // fontWeight: FontWeight.bold,
-                  decoration: isCompleted
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
-                  // fontSize: 18,
+              Expanded(
+                child: Text(
+                  todo,
+                  style: TextStyle(
+                    color: Colors.white,
+                    overflow: TextOverflow.visible,
+                    // fontWeight: FontWeight.bold,
+                    decoration: isCompleted
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                    // fontSize: 18,
+                  ),
                 ),
               ),
             ],

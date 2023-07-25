@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/components/dialog_box.dart';
 import 'package:todo_app/components/todo_tile.dart';
+import 'package:todo_app/data/todo_database.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,32 +12,55 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // reference box
+  final _mybox = Hive.box("Todo_Database");
+  // reference database
+  TodoDatabase db = TodoDatabase();
+
+  @override
+  void initState() {
+    // if this is the 1st time ever openin this app
+    if (_mybox.get("TODOLIST") == null) {
+      db.createInitialData();
+    } else {
+      // if data exists
+      db.loadData();
+    }
+    super.initState();
+  }
+
   // todo controller
 
   final _todoController = TextEditingController();
 
   // List of TO DO's
-  List todoList = [
-    ["Code an App", false],
-    ["Skillrack", false],
-  ];
+  // List todoList = [
+  //   ["Code an App", false],
+  //   ["Skillrack", false],
+  // ];
 
   // checkbox changed
   void checkboxChanged(bool? isCompleted, int index) {
     setState(() {
-      todoList[index][1] = !todoList[index][1];
+      db.todoList[index][1] = !db.todoList[index][1];
     });
+    // update
+    db.updateDatabase();
   }
 
   // save
   void save() {
-    setState(() {
-      todoList.add([_todoController.text, false]);
-    });
+    if (_todoController.text != '') {
+      setState(() {
+        db.todoList.add([_todoController.text, false]);
+        // clear
+        _todoController.clear();
+      });
+    }
     // pop
     Navigator.pop(context);
-    // clear
-    _todoController.clear();
+    // update
+    db.updateDatabase();
   }
 
   // cancel
@@ -58,8 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // delete todo
   void deleteTodo(int index) {
     setState(() {
-      todoList.removeAt(index);
+      db.todoList.removeAt(index);
     });
+    // update
+    db.updateDatabase();
   }
 
   @override
@@ -69,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
-          "TO DO",
+          "T A S K   S P O T",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -86,13 +113,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: ListView.builder(
         physics: const BouncingScrollPhysics(),
-        itemCount: todoList.length,
+        itemCount: db.todoList.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => checkboxChanged(todoList[index][1], index),
+            onTap: () => checkboxChanged(db.todoList[index][1], index),
             child: TodoTile(
-              todo: todoList[index][0],
-              isCompleted: todoList[index][1],
+              todo: db.todoList[index][0],
+              isCompleted: db.todoList[index][1],
               onChanged: (value) => checkboxChanged(value, index),
               deleteTodo: (context) => deleteTodo(index),
             ),

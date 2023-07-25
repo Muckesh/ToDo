@@ -16,7 +16,7 @@ class DialogBox extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Colors.grey.shade900,
       title: const Text(
-        "Add ToDO",
+        "Add New Task",
         style: TextStyle(
           color: Colors.white,
         ),
@@ -27,7 +27,7 @@ class DialogBox extends StatelessWidget {
         controller: todoController,
         decoration: InputDecoration(
           focusColor: Colors.white,
-          hintText: "To Do",
+          hintText: "Task",
           hintStyle: TextStyle(
             color: Colors.grey.shade200,
           ),
